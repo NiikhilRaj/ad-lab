@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    /* distinct styles for the outer table */
+    .outer-table {
+        border: 3px solid green;
+        border-collapse: collapse;
+    }
+    .outer-table td {
+        border: 2px solid green;
+        padding: 10px;
+    }
+    
+    /* distinct styles for the inner table */
+    .inner-table {
+        border: 2px solid blue;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .inner-table td {
+        border: 1px solid blue;
+        padding: 5px;
+    }
+</style>
+</head>
+<body>
+
+<h2>Task 2</h2>
+
+<table class="outer-table">
+    <tr>
+        <td rowspan="3" style="font-size: 20px;">Table 1</td>
+        
+        <td>
+            Table 1
+            <br><br>
+            <table class="inner-table">
+                <tr>
+                    <td>Table 2</td>
+                    <td>Table 2</td>
+                </tr>
+                <tr>
+                    <td>Table 2</td>
+                    <td>Table 2</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>Table 1</td>
+    </tr>
+    <tr>
+        <td>Table 1.</td>
+    </tr>
+</table>
+
+</body>
+</html>

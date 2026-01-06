@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    form {
+        width: 50%;
+        margin: 20px auto;
+        font-family: Arial, sans-serif;
+    }
+    fieldset {
+        margin-bottom: 20px;
+        border: 2px solid #ccc;
+        padding: 15px;
+    }
+    legend {
+        font-weight: bold;
+        color: #333;
+        padding: 0 5px;
+    }
+    label {
+        display: inline-block;
+        width: 150px;
+        margin-bottom: 10px;
+    }
+    input[type="text"], input[type="password"], input[type="email"] {
+        padding: 5px;
+        width: 200px;
+    }
+    input[type="submit"] {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Registration Form</h2>
+
+<form action="#" method="post">
+
+    <fieldset>
+        <legend>Login Details</legend>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br>
+        
+        <label for="pwd">Password:</label>
+        <input type="password" id="pwd" name="pwd"><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Personal Information</legend>
+        <label for="fname">First Name:</label>
+        <input type="text" id="fname" name="fname"><br>
+        
+        <label for="lname">Last Name:</label>
+        <input type="text" id="lname" name="lname"><br>
+        
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob"><br>
+        
+        <label>Gender:</label>
+        <input type="radio" id="male" name="gender" value="male"> Male
+        <input type="radio" id="female" name="gender" value="female"> Female
+    </fieldset>
+
+    <fieldset>
+        <legend>Academic Information</legend>
+        <label for="degree">Degree:</label>
+        <select id="degree" name="degree">
+            <option value="btech">B.Tech</option>
+            <option value="mtech">M.Tech</option>
+            <option value="bca">BCA</option>
+            <option value="mca">MCA</option>
+        </select><br><br>
+        
+        <label for="cgpa">Current CGPA:</label>
+        <input type="number" id="cgpa" name="cgpa" step="0.01" min="0" max="10"><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Professional Information</legend>
+        <label for="skills">Key Skills:</label>
+        <input type="text" id="skills" name="skills" placeholder="e.g. Java, Python"><br>
+        
+        <label for="experience">Experience (Years):</label>
+        <input type="number" id="experience" name="experience" min="0"><br>
+        
+        <label for="linkedin">LinkedIn URL:</label>
+        <input type="url" id="linkedin" name="linkedin">
+    </fieldset>
+
+    <div style="text-align:center;">
+        <input type="submit" value="Register">
+    </div>
+
+</form>
+
+</body>
+</html>
