@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>11. Local Storage Theme</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="initTheme()">
+    <div class="card">
+        <h1>11. Local Storage Theme</h1>
+        <input type="color" id="p11_color"
+            onchange="localStorage.setItem('theme', this.value); document.body.style.backgroundColor = this.value">
+        <p>Reload to see persistence.</p>
+        <p><a href="1.html">Back</a></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

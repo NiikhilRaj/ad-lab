@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Click List</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .user-item { 
+            padding: 10px; margin: 5px 0; background: #f0f0f0; 
+            cursor: pointer; border-radius: 4px; display: flex; justify-content: space-between;
+        }
+        .user-item:hover { background: #e0e0e0; }
+        .controls { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <input type="text" id="nameInput" placeholder="Enter name">
+        <button onclick="addUser()">Add User</button>
+    </div>
+
+    <div id="listContainer">
+        <div class="user-item" onclick="increment(this)">
+            <span class="name">Delwin</span>
+            <span class="count">Clicks: 0</span>
+        </div>
+    </div>
+
+    <script>
+        function increment(element) {
+            const countSpan = element.querySelector('.count');
+            let currentCount = parseInt(countSpan.textContent.split(': ')[1]);
+            countSpan.textContent = `Clicks: ${currentCount + 1}`;
+        }
+
+        function addUser() {
+            const name = document.getElementById('nameInput').value;
+            if (!name) return;
+
+            const div = document.createElement('div');
+            div.className = 'user-item';
+            div.onclick = function() { increment(this); };
+            div.innerHTML = `<span class="name">${name}</span><span class="count">Clicks: 0</span>`;
+            
+            document.getElementById('listContainer').appendChild(div);
+            document.getElementById('nameInput').value = ''; // Clear input
+        }
+    </script>
+</body>
+</html>
