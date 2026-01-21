@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20 JavaScript Assignments (Single File)</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --bg: #f4f4f9;
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--primary);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        input,
+        button,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        .result-box {
+            background: #eef;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #img-preview {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        #anim-display {
+            font-size: 24px;
+            letter-spacing: 5px;
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>JavaScript Lab Assignments (1-20)</h1>
+    <div class="grid-container">
+        <div class="card">
+            <h3>1. Age Calculator</h3>
+            <input type="date" id="dobInput">
+            <button onclick="calculateAge()">Calculate Age</button>
+            <div id="res1" class="result-box"></div>
+        </div>
+        <div class="card">
+            <h3>2. Dynamic List</h3>
+            <input type="text" id="listInput" placeholder="Enter item">
+            <button onclick="addListItem()">Add to List</button>
+            <ol id="dynamicList"></ol>
+        </div>
+        <div class="card">
+            <h3>3. Font Switcher</h3>
+            <select onchange="changeFont(this.value)">
+                <option value="Arial">Arial</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Times New Roman">Times New Roman</option>
+            </select>
+            <p id="fontText">Sample text to change font.</p>
+        </div>
+        <div class="card">
+            <h3>4. Factorial Calculator</h3>
+            <input type="number" id="factInput" placeholder="Enter a number">
+            <button onclick="calculateFactorial()">Calculate</button>
+            <div id="res4" class="result-box"></div>
+        </div>
+        <div class="card">
+            <h3>5. Highlight Keyword</h3>
+            <p id="searchableText">JavaScript is versatile. JavaScript is dynamic. We love JavaScript.</p>
+            <input type="text" id="searchInput" placeholder="Enter keyword (e.g., JavaScript)">
+            <button onclick="highlightText()">Highlight</button>
+        </div>
+        <div class="card">
+            <h3>6. Dynamic Table Generator</h3>
+            <input type="number" id="rows" placeholder="Rows" min="1">
+            <input type="number" id="cols" placeholder="Cols" min="1">
+            <button onclick="generateTable()">Generate</button>
+            <table id="dynamicTable" border="1" style="width:100%; margin-top:10px; border-collapse:collapse;"></table>
+        </div>
+        <div class="card">
+            <h3>7. Image Preview</h3>
+            <input type="file" accept="image/*" onchange="previewImage(event)">
+            <img id="img-preview" src="" alt="Preview will appear here">
+        </div>
+        <div class="card">
+            <h3>8. To-Do List</h3>
+            <input type="text" id="todoInput" placeholder="New Task">
+            <button onclick="addTodo()">Add Task</button>
+            <ul id="todoList"></ul>
+        </div>
+        <div class="card">
+            <h3>9. Login Form</h3>
+            <input type="text" id="uName" placeholder="Username (admin)">
+            <input type="password" id="uPass" placeholder="Password (1234)">
+            <button onclick="validateLogin()">Login</button>
+            <div id="res9" class="result-box"></div>
+        </div>
+        <div class="card">
+            <h3>10. Simple Quiz</h3>
+            <p>What is 2 + 2?</p>
+            <select id="quizAnswer">
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button onclick="checkQuiz()">Submit Answer</button>
+            <div id="res10" class="result-box"></div>
+        </div>
+        <div class="card">
+            <h3>11. Word Count</h3>
+            <textarea id="wordInput" oninput="countWords()" placeholder="Type sentence..."></textarea>
+            <div id="res11" class="result-box">Word Count: 0</div>
+        </div>
+        <div class="card">
+            <h3>12. Date Alert</h3>
+            <button onclick="alert(new Date())">Show Date & Time</button>
+        </div>
+        <div class="card">
+            <h3>13. Button Toggle</h3>
+            <input type="text" id="toggleInput" oninput="toggleButton()" placeholder="Type to enable button">
+            <button id="toggleBtn" disabled>I am Disabled</button>
+        </div>
+        <div class="card">
+            <h3>14. Show/Hide Text</h3>
+            <button onclick="toggleText()">Toggle Text</button>
+            <p id="toggleBlock">This is the hidden text block!</p>
+        </div>
+        <div class="card">
+            <h3>15. Even/Odd Checker</h3>
+            <input type="number" id="numInput" placeholder="Enter number">
+            <button onclick="checkEvenOdd()">Check</button>
+            <div id="res15" class="result-box"></div>
+        </div>
+        <div class="card">
+            <h3>16. Case Converter</h3>
+            <input type="text" id="caseInput" placeholder="Enter text">
+            <button onclick="convertCase('upper')">To Uppercase</button>
+            <button onclick="convertCase('lower')">To Lowercase</button>
+            <div id="res16" class="result-box"></div>
+        </div>
+        <div class="card">
+            <h3>17. Counter</h3>
+            <h2 id="counterVal" style="text-align:center;">0</h2>
+            <button onclick="updateCounter(1)">Increment (+)</button>
+            <button onclick="updateCounter(-1)">Decrement (-)</button>
+        </div>
+        <div class="card">
+            <h3>18. Vowel Counter</h3>
+            <input type="text" id="vowelInput" placeholder="Enter string">
+            <button onclick="countVowels()">Count Vowels</button>
+            <div id="res18" class="result-box"></div>
+        </div>
+        <div class="card">
+            <h3>19. Name Animation</h3>
+            <input type="text" id="animName" placeholder="Enter Name">
+            <button onclick="animateName()">Animate</button>
+            <div id="anim-display"></div>
+        </div>
+        <div class="card">
+            <h3>20. Reverse String</h3>
+            <input type="text" id="revInput" placeholder="Enter text">
+            <button onclick="reverseString()">Reverse</button>
+            <div id="res20" class="result-box"></div>
+        </div>
+    </div>
+    <script>
+        // 1. Age Calculator
+        function calculateAge() {
+            const dob = new Date(document.getElementById('dobInput').value);
+            const now = new Date();
+            if (isNaN(dob)) return;
+            let years = now.getFullYear() - dob.getFullYear();
+            let months = now.getMonth() - dob.getMonth();
+            let days = now.getDate() - dob.getDate();
+            if (months < 0 || (months === 0 && days < 0)) years--;
+            document.getElementById('res1').textContent = `Age: ${years} years`;
+        }
+        // 2. Dynamic List
+        function addListItem() {
+            const val = document.getElementById('listInput').value;
+            if (val) {
+                const li = document.createElement('li');
+                li.textContent = val;
+                document.getElementById('dynamicList').appendChild(li);
+                document.getElementById('listInput').value = '';
+            }
+        }
+        // 3. Font Switcher
+        function changeFont(font) {
+            document.getElementById('fontText').style.fontFamily = font;
+        }
+        // 4. Factorial
+        function calculateFactorial() {
+            let n = parseInt(document.getElementById('factInput').value);
+            let f = 1;
+            for (let i = 1; i <= n; i++) f *= i;
+            document.getElementById('res4').textContent = `Factorial: ${f}`;
+        }
+        // 5. Keyword Highlight
+        function highlightText() {
+            const textP = document.getElementById('searchableText');
+            const key = document.getElementById('searchInput').value;
+            textP.innerHTML = textP.textContent;
+            if (key) {
+                const regex = new RegExp(`(${key})`, 'gi');
+                textP.innerHTML = textP.textContent.replace(regex, '<span class="highlight">$1</span>');
+            }
+        }
+        // 6. Dynamic Table
+        function generateTable() {
+            const r = document.getElementById('rows').value;
+            const c = document.getElementById('cols').value;
+            let html = '';
+            for (let i = 0; i < r; i++) {
+                html += '<tr>';
+                for (let j = 0; j < c; j++) html += `<td>R${i + 1}C${j + 1}</td>`;
+                html += '</tr>';
+            }
+            document.getElementById('dynamicTable').innerHTML = html;
+        }
+        // 7. Image Preview
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById('img-preview').src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+        // 8. To-Do List
+        function addTodo() {
+            const task = document.getElementById('todoInput').value;
+            if (task) {
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+                li.innerHTML = `<span onclick="this.classList.toggle('completed')">${task}</span> <button style="width:auto; padding:2px 5px;" onclick="this.parentElement.remove()">X</button>`;
+                document.getElementById('todoList').appendChild(li);
+                document.getElementById('todoInput').value = '';
+            }
+        }
+        // 9. Login Validation
+        function validateLogin() {
+            const u = document.getElementById('uName').value;
+            const p = document.getElementById('uPass').value;
+            const res = document.getElementById('res9');
+            if (u === 'admin' && p === '1234') {
+                res.textContent = "Success: Logged in!";
+                res.style.color = "green";
+            } else {
+                res.textContent = "Error: Invalid credentials.";
+                res.style.color = "red";
+            }
+        }
+        // 10. Quiz
+        function checkQuiz() {
+            const ans = document.getElementById('quizAnswer').value;
+            const res = document.getElementById('res10');
+            if (ans === '4') res.textContent = "Correct! Score: 1/1";
+            else res.textContent = "Wrong! Score: 0/1";
+        }
+        // 11. Word Count
+        function countWords() {
+            const text = document.getElementById('wordInput').value.trim();
+            const count = text ? text.split(/\s+/).length : 0;
+            document.getElementById('res11').textContent = `Word Count: ${count}`;
+        }
+        // 13. Enable/Disable Button
+        function toggleButton() {
+            const val = document.getElementById('toggleInput').value;
+            const btn = document.getElementById('toggleBtn');
+            if (val.length > 0) {
+                btn.disabled = false;
+                btn.textContent = "I am Enabled";
+            } else {
+                btn.disabled = true;
+                btn.textContent = "I am Disabled";
+            }
+        }
+        // 14. Toggle Text
+        function toggleText() {
+            const el = document.getElementById('toggleBlock');
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+        }
+        // 15. Even/Odd
+        function checkEvenOdd() {
+            const n = document.getElementById('numInput').value;
+            document.getElementById('res15').textContent = (n % 2 === 0) ? "Even" : "Odd";
+        }
+        // 16. Case Converter
+        function convertCase(type) {
+            const input = document.getElementById('caseInput');
+            if (type === 'upper') document.getElementById('res16').textContent = input.value.toUpperCase();
+            else document.getElementById('res16').textContent = input.value.toLowerCase();
+        }
+        // 17. Counter
+        let count = 0;
+        function updateCounter(val) {
+            count += val;
+            document.getElementById('counterVal').textContent = count;
+        }
+        // 18. Vowel Counter
+        function countVowels() {
+            const str = document.getElementById('vowelInput').value;
+            const matches = str.match(/[aeiou]/gi);
+            document.getElementById('res18').textContent = `Vowels: ${matches ? matches.length : 0}`;
+        }
+        // 19. Name Animation
+        function animateName() {
+            const name = document.getElementById('animName').value;
+            const display = document.getElementById('anim-display');
+            display.textContent = "";
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < name.length) {
+                    display.textContent += name.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 300);
+        }
+        // 20. Reverse String
+        function reverseString() {
+            const s = document.getElementById('revInput').value;
+            document.getElementById('res20').textContent = s.split('').reverse().join('');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30 Questions - Single File Submission</title>
+<style>
+    /* Global Styles */
+    body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9; color: #333; }
+    h2 { border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+    
+    /* Navigation */
+    .nav-panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    select { padding: 10px; width: 100%; font-size: 16px; border: 1px solid #ddd; border-radius: 4px; }
+
+    /* Problem Container */
+    .problem-box { display: none; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); min-height: 300px; }
+    .problem-box.active { display: block; }
+    
+    /* Common UI Elements for Problems */
+    button { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px 0; }
+    button:hover { background: #0056b3; }
+    input, textarea { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; margin: 5px 0; }
+    .result-area { margin-top: 15px; padding: 10px; background: #eee; border-radius: 4px; }
+    
+    /* Specific Styles needed for specific questions */
+    .completed { text-decoration: line-through; color: gray; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
+    .modal-content { background: white; padding: 20px; border-radius: 8px; width: 300px; }
+    .dark-mode { background: #333; color: white; }
+    .dark-mode .problem-box, .dark-mode .nav-panel { background: #444; color: white; }
+    .tab-btn { background: #ddd; color: black; }
+    .tab-btn.active-tab { background: #007bff; color: white; }
+    #dragList1, #dragList2 { min-height: 100px; border: 1px dashed #999; padding: 10px; }
+    .draggable { padding: 5px; background: #e3f2fd; margin: 5px; cursor: move; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border: 1px solid #ddd; padding: 8px; }
+</style>
+</head>
+<body>
+
+<div class="nav-panel">
+    <label><strong>Select Problem:</strong></label>
+    <select id="problemSelect" onchange="showProblem()">
+        <option value="1">1. Add Paragraph</option>
+        <option value="2">2. Dynamic Table</option>
+        <option value="3">3. Hover Button Color</option>
+        <option value="4">4. Live Clock</option>
+        <option value="5">5. Todo List (Line-through)</option>
+        <option value="6">6. Form Validation</option>
+        <option value="7">7. Modal Dialog</option>
+        <option value="8">8. Dynamic Dropdown</option>
+        <option value="9">9. FAQ Collapsible</option>
+        <option value="10">10. Animate Element</option>
+        <option value="11">11. Local Storage Theme</option>
+        <option value="12">12. Dynamic Bar Chart</option>
+        <option value="13">13. Shopping Cart</option>
+        <option value="14">14. Fetch API Data</option>
+        <option value="15">15. Filter List</option>
+        <option value="16">16. Character Counter</option>
+        <option value="17">17. Drag and Drop</option>
+        <option value="18">18. Paginated Table</option>
+        <option value="19">19. Image Gallery</option>
+        <option value="20">20. Expense Tracker</option>
+        <option value="21">21. Image Description Hover</option>
+        <option value="22">22. Tabbed Interface</option>
+        <option value="23">23. Light/Dark Toggle</option>
+        <option value="24">24. Highlight Table Row</option>
+        <option value="25">25. Category Filter</option>
+        <option value="26">26. Image Rotator</option>
+        <option value="27">27. Tooltip</option>
+        <option value="28">28. Dynamic Greeting</option>
+        <option value="29">29. Tree Structure</option>
+        <option value="30">30. Real-time Text Sync</option>
+    </select>
+</div>
+
+<div id="problemsContainer"></div>
+
+<script>
+    // --- RENDER FUNCTIONS FOR ALL 30 PROBLEMS ---
+    // Instead of writing 30 hardcoded DIVs, we render the active one to keep DOM light.
+    
+    const container = document.getElementById('problemsContainer');
+    
+    const problems = {
+        1: `<h3>1. Add Paragraph</h3><button onclick="p1_add()">Add Text</button><div id="p1_dest"></div>`,
+        2: `<h3>2. Dynamic Table</h3><input id="p2_in" placeholder="Content"><button onclick="p2_update()">Update Cell (0,0)</button><table id="p2_table"><tr><td>Original</td><td>Data</td></tr></table>`,
+        3: `<h3>3. Hover Button</h3><button id="p3_btn" onmouseover="this.style.background='red'" onmouseout="this.style.background='#007bff'">Hover Me</button>`,
+        4: `<h3>4. Live Clock</h3><h2 id="p4_clock">Waiting...</h2>`,
+        5: `<h3>5. Todo List</h3><ul id="p5_list"><li onclick="this.classList.toggle('completed')">Click me to complete</li></ul>`,
+        6: `<h3>6. Validation</h3><input id="p6_email" placeholder="Email"><span id="p6_err" style="color:red"></span><br><button onclick="p6_val()">Validate</button>`,
+        7: `<h3>7. Modal</h3><button onclick="document.getElementById('p7_modal').style.display='flex'">Open Modal</button><div id="p7_modal" class="modal"><div class="modal-content"><p>Hello!</p><button onclick="document.getElementById('p7_modal').style.display='none'">Close</button></div></div>`,
+        8: `<h3>8. Dynamic Dropdown</h3><select id="p8_cat" onchange="p8_change()"><option>Fruits</option><option>Tech</option></select><select id="p8_sub"></select>`,
+        9: `<h3>9. FAQ</h3><div onclick="document.getElementById('p9_ans').hidden = !document.getElementById('p9_ans').hidden" style="cursor:pointer; font-weight:bold">What is HTML? (Click me)</div><div id="p9_ans" hidden>Hyper Text Markup Language.</div>`,
+        10: `<h3>10. Animation</h3><div id="p10_box" style="width:50px; height:50px; background:red; position:relative;"></div><button onclick="p10_move()">Move</button>`,
+        11: `<h3>11. Local Storage Theme</h3><input type="color" id="p11_color" onchange="localStorage.setItem('theme', this.value); document.body.style.backgroundColor = this.value"><p>Reload to see persistence.</p>`,
+        12: `<h3>12. Bar Chart</h3><div id="p12_chart" style="display:flex; align-items:end; height:200px; border:1px solid #333"></div><button onclick="p12_gen()">Generate Random</button>`,
+        13: `<h3>13. Shopping Cart</h3><ul id="p13_cart"></ul><button onclick="p13_add()">Add Item</button>`,
+        14: `<h3>14. Fetch API</h3><button onclick="p14_fetch()">Load User</button><div id="p14_res"></div>`,
+        15: `<h3>15. Search Filter</h3><input onkeyup="p15_filter(this)" placeholder="Search..."><ul id="p15_list"><li>Apple</li><li>Banana</li><li>Cherry</li></ul>`,
+        16: `<h3>16. Char Counter</h3><textarea oninput="p16_count(this)" maxlength="20"></textarea><div id="p16_disp">0/20</div>`,
+        17: `<h3>17. Drag Drop</h3><div id="dragList1" ondrop="drop(event)" ondragover="allowDrop(event)"><div id="drag1" draggable="true" ondragstart="drag(event)" class="draggable">Item A</div></div><hr><div id="dragList2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>`,
+        18: `<h3>18. Pagination</h3><div id="p18_content"></div><button onclick="p18_page(1)">1</button><button onclick="p18_page(2)">2</button>`,
+        19: `<h3>19. Gallery</h3><img id="p19_img" src="https://via.placeholder.com/150" style="width:200px"><br><button onclick="p19_nav(-1)">Prev</button><button onclick="p19_nav(1)">Next</button>`,
+        20: `<h3>20. Expense Tracker</h3><input id="p20_desc" placeholder="Desc"><input id="p20_amt" type="number" placeholder="$$$"><button onclick="p20_add()">Add</button><ul id="p20_list"></ul>`,
+        21: `<h3>21. Image Hover Desc</h3><div onmouseover="document.getElementById('p21_desc').style.display='block'" onmouseout="document.getElementById('p21_desc').style.display='none'" style="display:inline-block; border:1px solid black; padding:20px;">Image Placeholder</div><div id="p21_desc" style="display:none">This is the description!</div>`,
+        22: `<h3>22. Tabs</h3><div style="display:flex"><button class="tab-btn" onclick="p22_tab(0)">Tab 1</button><button class="tab-btn" onclick="p22_tab(1)">Tab 2</button></div><div id="p22_c">Content 1</div>`,
+        23: `<h3>23. Dark Mode</h3><button onclick="document.body.classList.toggle('dark-mode')">Toggle Mode</button>`,
+        24: `<h3>24. Row Highlight</h3><table onmouseover="p24_high(event)" onmouseout="p24_low(event)"><tr><td>Row 1</td></tr><tr><td>Row 2</td></tr><tr><td>Row 3</td></tr></table>`,
+        25: `<h3>25. Category Filter</h3><select onchange="p25_filt(this.value)"><option value="all">All</option><option value="a">A</option><option value="b">B</option></select><ul id="p25_l"><li class="a">Item A1</li><li class="b">Item B1</li><li class="a">Item A2</li></ul>`,
+        26: `<h3>26. Image Rotator</h3><img id="p26_img" src="https://via.placeholder.com/100/FF0000"><p>Rotates every 2 sec</p>`,
+        27: `<h3>27. Tooltip</h3><span title="I am a tooltip!" style="border-bottom:1px dotted black">Hover over me</span>`,
+        28: `<h3>28. Greeting</h3><h2 id="p28_msg"></h2>`,
+        29: `<h3>29. Tree View</h3><ul style="list-style:none"><li><span onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden" style="cursor:pointer">📂 Folder</span><ul hidden><li>📄 File 1</li><li>📄 File 2</li></ul></li></ul>`,
+        30: `<h3>30. Text Sync</h3><textarea oninput="document.getElementById('p30_b').value = this.value"></textarea><textarea id="p30_b"></textarea>`
+    };
+
+    function showProblem() {
+        const id = document.getElementById('problemSelect').value;
+        const box = document.getElementById('problemsContainer');
+        box.innerHTML = `<div class="problem-box active">${problems[id]}</div>`;
+        
+        // Initialize specific problems that need loading
+        if(id == 4) startClock();
+        if(id == 8) p8_change();
+        if(id == 11) initTheme();
+        if(id == 26) startRotator();
+        if(id == 28) setGreeting();
+        if(id == 18) p18_page(1);
+    }
+
+    // --- LOGIC FUNCTIONS ---
+    
+    // Q1
+    function p1_add() { document.getElementById('p1_dest').innerHTML += '<p>New Paragraph</p>'; }
+    
+    // Q2
+    function p2_update() { document.querySelector('#p2_table tr td').innerText = document.getElementById('p2_in').value; }
+    
+    // Q4
+    function startClock() {
+        setInterval(() => { if(document.getElementById('p4_clock')) document.getElementById('p4_clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+    }
+    
+    // Q6
+    function p6_val() {
+        let e = document.getElementById('p6_email').value;
+        document.getElementById('p6_err').innerText = e.includes('@') ? "" : "Invalid Email";
+    }
+
+    // Q8
+    function p8_change() {
+        const map = { 'Fruits': ['Apple', 'Mango'], 'Tech': ['AI', 'Web'] };
+        const val = document.getElementById('p8_cat').value;
+        const sub = document.getElementById('p8_sub');
+        sub.innerHTML = map[val].map(i => `<option>${i}</option>`).join('');
+    }
+
+    // Q10
+    function p10_move() {
+        const b = document.getElementById('p10_box');
+        let pos = 0;
+        let id = setInterval(() => { if(pos==300) clearInterval(id); else { pos++; b.style.left = pos + 'px'; }}, 1);
+    }
+
+    // Q11
+    function initTheme() {
+        if(localStorage.getItem('theme')) document.body.style.backgroundColor = localStorage.getItem('theme');
+    }
+
+    // Q12
+    function p12_gen() {
+        const c = document.getElementById('p12_chart');
+        c.innerHTML = '';
+        [50, 80, 30, 90, 20].forEach(h => {
+            let b = document.createElement('div');
+            b.style.height = h + 'px';
+            b.style.width = '20px';
+            b.style.background = 'blue';
+            b.style.margin = '2px';
+            c.appendChild(b);
+        });
+    }
+
+    // Q13
+    function p13_add() {
+        document.getElementById('p13_cart').innerHTML += '<li>Item <button onclick="this.parentElement.remove()">Remove</button></li>';
+    }
+
+    // Q14
+    async function p14_fetch() {
+        const r = await fetch('https://jsonplaceholder.typicode.com/users/1');
+        const d = await r.json();
+        document.getElementById('p14_res').innerText = d.name;
+    }
+
+    // Q15
+    function p15_filter(input) {
+        document.querySelectorAll('#p15_list li').forEach(li => {
+            li.style.display = li.innerText.toLowerCase().includes(input.value.toLowerCase()) ? 'block' : 'none';
+        });
+    }
+
+    // Q16
+    function p16_count(txt) {
+        document.getElementById('p16_disp').innerText = `${txt.value.length}/20`;
+        if(txt.value.length >= 18) alert("Limit close!");
+    }
+
+    // Q17 (Drag Drop)
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+
+    // Q18
+    function p18_page(n) {
+        document.getElementById('p18_content').innerText = n === 1 ? "Page 1 Data: Alice, Bob" : "Page 2 Data: Charlie, Dave";
+    }
+
+    // Q19
+    let imgIdx = 0;
+    const imgs = ['https://via.placeholder.com/150/0000FF', 'https://via.placeholder.com/150/FF0000'];
+    function p19_nav(d) {
+        imgIdx = (imgIdx + d + imgs.length) % imgs.length;
+        document.getElementById('p19_img').src = imgs[imgIdx];
+    }
+
+    // Q20
+    function p20_add() {
+        let d = document.getElementById('p20_desc').value;
+        let a = document.getElementById('p20_amt').value;
+        document.getElementById('p20_list').innerHTML += `<li>${d}: $${a}</li>`;
+    }
+
+    // Q22
+    function p22_tab(n) {
+        document.getElementById('p22_c').innerText = n === 0 ? "Content 1" : "Content 2";
+        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active-tab', i===n));
+    }
+
+    // Q24
+    function p24_high(e) { if(e.target.tagName==='TD') e.target.parentElement.style.background = '#eee'; }
+    function p24_low(e) { if(e.target.tagName==='TD') e.target.parentElement.style.background = 'white'; }
+
+    // Q25
+    function p25_filt(cat) {
+        document.querySelectorAll('#p25_l li').forEach(li => {
+            li.style.display = (cat === 'all' || li.classList.contains(cat)) ? 'block' : 'none';
+        });
+    }
+
+    // Q26
+    function startRotator() {
+        setInterval(() => {
+             const img = document.getElementById('p26_img');
+             if(img) img.style.transform = `rotate(${new Date().getSeconds() * 6}deg)`;
+        }, 1000);
+    }
+
+    // Q28
+    function setGreeting() {
+        const h = new Date().getHours();
+        const m = h < 12 ? "Good Morning" : h < 18 ? "Good Afternoon" : "Good Evening";
+        if(document.getElementById('p28_msg')) document.getElementById('p28_msg').innerText = m;
+    }
+
+    // Initial Load
+    showProblem();
+
+</script>
+</body>
+</html>

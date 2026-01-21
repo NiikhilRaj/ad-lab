@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Assignment - 8 Problems</title>
+<style>
+    /* --- Global Styles --- */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f4f9; color: #333; transition: all 0.3s ease; }
+    
+    /* Navigation Panel */
+    .nav-panel { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; border-left: 5px solid #007bff; }
+    select { padding: 10px; width: 100%; font-size: 16px; border: 1px solid #ddd; border-radius: 6px; outline: none; }
+
+    /* Problem Container */
+    .problem-box { display: none; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 400px; animation: fadeIn 0.3s ease-in-out; }
+    .problem-box.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Common Elements */
+    h2 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 15px; color: #007bff; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+    button:hover { background: #0056b3; }
+    input, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+    
+    /* --- Problem Specific Styles --- */
+
+    /* Q1: Dark Theme */
+    body.dark-theme { background-color: #121212; color: #e0e0e0; font-family: 'Courier New', Courier, monospace; } /* Font change requested */
+    .dark-theme .nav-panel, .dark-theme .problem-box { background-color: #1e1e1e; border-color: #bb86fc; }
+    .dark-theme h2 { color: #bb86fc; }
+
+    /* Q2: To-Do List */
+    ul#todoList { list-style: none; padding: 0; }
+    ul#todoList li { background: #f9f9f9; padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+    ul#todoList li button { background: #ff4444; padding: 5px 10px; font-size: 12px; margin-left: 10px; }
+    
+    /* Q4: Image Gallery */
+    .gallery { display: flex; gap: 15px; flex-wrap: wrap; }
+    .gallery img { width: 150px; height: 100px; object-fit: cover; border-radius: 8px; transition: all 0.3s ease; border: 2px solid transparent; }
+    .gallery img:hover { transform: scale(1.1); border: 3px solid #007bff; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+    /* Q5: Validation */
+    .error { color: red; font-size: 0.9em; margin-bottom: 10px; display: block; }
+
+    /* Q6: FAQ */
+    .faq-item { border-bottom: 1px solid #eee; }
+    .faq-question { padding: 15px; background: #f8f9fa; cursor: pointer; font-weight: bold; position: relative; }
+    .faq-question:after { content: '+'; float: right; }
+    .faq-answer { display: none; padding: 15px; background: white; color: #666; }
+    .faq-item.open .faq-answer { display: block; }
+    .faq-item.open .faq-question:after { content: '-'; }
+
+    /* Q7: Dynamic Table */
+    table#dynamicTable { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    table#dynamicTable td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+
+    /* Q8: Quiz & Clock */
+    #clockDisplay { font-size: 2em; font-weight: bold; text-align: center; background: #333; color: #0f0; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-family: 'Courier New', monospace; }
+    .quiz-question { margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<div class="nav-panel">
+    <label><strong>Select Assignment Problem:</strong></label>
+    <select id="problemSelect" onchange="switchProblem()">
+        <option value="1">1. Light/Dark Theme Toggle</option>
+        <option value="2">2. Simple To-Do List</option>
+        <option value="3">3. Real-time Character Counter</option>
+        <option value="4">4. Image Gallery (Hover Effects)</option>
+        <option value="5">5. Form Validation</option>
+        <option value="6">6. FAQ Accordion</option>
+        <option value="7">7. Dynamic Table Generator</option>
+        <option value="8">8. Quiz with Score & Digital Clock</option>
+    </select>
+</div>
+
+<div id="p1" class="problem-box active">
+    <h2>1. Theme Switcher</h2>
+    <p>Click the button below to toggle between Light and Dark themes. Note: Background, Text Color, and Font Family will change.</p>
+    <button onclick="toggleTheme()">Toggle Light/Dark Theme</button>
+</div>
+
+<div id="p2" class="problem-box">
+    <h2>2. To-Do List</h2>
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="todoInput" placeholder="Enter a new task...">
+        <button onclick="addTodo()">Add Task</button>
+    </div>
+    <ul id="todoList">
+        </ul>
+</div>
+
+<div id="p3" class="problem-box">
+    <h2>3. Character Counter</h2>
+    <p>Type in the box below to see the count update in real-time.</p>
+    <textarea id="charInput" rows="5" oninput="updateCount()" placeholder="Start typing..."></textarea>
+    <p>Character Count: <strong id="charCount" style="font-size: 1.2em; color: #007bff;">0</strong></p>
+</div>
+
+<div id="p4" class="problem-box">
+    <h2>4. Interactive Image Gallery</h2>
+    <p>Hover over images to see zoom and border effects.</p>
+    <div class="gallery">
+        <img src="https://picsum.photos/200/200?random=1" alt="Img 1">
+        <img src="https://picsum.photos/200/200?random=2" alt="Img 2">
+        <img src="https://picsum.photos/200/200?random=3" alt="Img 3">
+        <img src="https://picsum.photos/200/200?random=4" alt="Img 4">
+    </div>
+</div>
+
+<div id="p5" class="problem-box">
+    <h2>5. Registration Validation</h2>
+    <form onsubmit="return validateForm(event)">
+        <label>Name:</label>
+        <input type="text" id="regName">
+        <span id="errName" class="error"></span>
+
+        <label>Email:</label>
+        <input type="text" id="regEmail">
+        <span id="errEmail" class="error"></span>
+
+        <label>Password (Min 6 chars):</label>
+        <input type="password" id="regPass">
+        <span id="errPass" class="error"></span>
+
+        <button type="submit">Register</button>
+    </form>
+    <div id="successMsg" style="color: green; margin-top: 10px; font-weight: bold;"></div>
+</div>
+
+<div id="p6" class="problem-box">
+    <h2>6. FAQ Accordion</h2>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What is HTML?</div>
+        <div class="faq-answer">HTML stands for Hyper Text Markup Language. It is the standard markup language for creating Web pages.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What is CSS?</div>
+        <div class="faq-answer">CSS stands for Cascading Style Sheets. It describes how HTML elements are to be displayed on screen.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What is JavaScript?</div>
+        <div class="faq-answer">JavaScript is the programming language of the Web. It is easy to learn.</div>
+    </div>
+</div>
+
+<div id="p7" class="problem-box">
+    <h2>7. Dynamic Table Generator</h2>
+    <input type="number" id="rows" placeholder="Number of Rows" min="1" style="width: 48%;">
+    <input type="number" id="cols" placeholder="Number of Columns" min="1" style="width: 48%;">
+    <button onclick="generateTable()">Generate Table</button>
+    <div id="tableContainer"></div>
+</div>
+
+<div id="p8" class="problem-box">
+    <div id="clockDisplay">00:00:00</div>
+    <h2>8. Quiz Application</h2>
+    
+    <div id="quizContainer">
+        <div class="quiz-question">
+            <p><strong>1. Which tag is used for the largest heading?</strong></p>
+            <label><input type="radio" name="q1" value="a"> &lt;head&gt;</label><br>
+            <label><input type="radio" name="q1" value="b"> &lt;h1&gt;</label><br>
+            <label><input type="radio" name="q1" value="c"> &lt;h6&gt;</label>
+        </div>
+
+        <div class="quiz-question">
+            <p><strong>2. Which CSS property changes text color?</strong></p>
+            <label><input type="radio" name="q2" value="a"> color</label><br>
+            <label><input type="radio" name="q2" value="b"> text-color</label><br>
+            <label><input type="radio" name="q2" value="c"> font-color</label>
+        </div>
+
+        <button onclick="calculateScore()">Submit Quiz</button>
+    </div>
+    <h3 id="quizResult" style="margin-top: 20px;"></h3>
+</div>
+
+<script>
+    // --- Navigation Logic ---
+    function switchProblem() {
+        // Hide all boxes
+        document.querySelectorAll('.problem-box').forEach(box => box.classList.remove('active'));
+        // Show selected box
+        const selectedId = document.getElementById('problemSelect').value;
+        document.getElementById('p' + selectedId).classList.add('active');
+        
+        // Specific init for Q8 clock
+        if (selectedId == 8) startClock();
+    }
+
+    // --- Q1: Theme Toggle ---
+    function toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+    }
+
+    // --- Q2: To-Do List ---
+    function addTodo() {
+        const input = document.getElementById('todoInput');
+        const text = input.value.trim();
+        if (!text) return alert("Please enter a task!");
+
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${text}</span> <button onclick="this.parentElement.remove()">Delete</button>`;
+        document.getElementById('todoList').appendChild(li);
+        input.value = ""; // Clear input
+    }
+
+    // --- Q3: Character Counter ---
+    function updateCount() {
+        const len = document.getElementById('charInput').value.length;
+        document.getElementById('charCount').innerText = len;
+    }
+
+    // --- Q4: Image Gallery (Handled via CSS) ---
+
+    // --- Q5: Form Validation ---
+    function validateForm(e) {
+        e.preventDefault();
+        let valid = true;
+        
+        // Reset errors
+        document.querySelectorAll('.error').forEach(el => el.innerText = "");
+        document.getElementById('successMsg').innerText = "";
+
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPass').value;
+
+        if (name === "") {
+            document.getElementById('errName').innerText = "Name is required";
+            valid = false;
+        }
+        if (!email.includes("@") || !email.includes(".")) {
+            document.getElementById('errEmail').innerText = "Invalid email address";
+            valid = false;
+        }
+        if (pass.length < 6) {
+            document.getElementById('errPass').innerText = "Password must be at least 6 chars";
+            valid = false;
+        }
+
+        if (valid) {
+            document.getElementById('successMsg').innerText = "Validation Successful! Submitting...";
+        }
+    }
+
+    // --- Q6: FAQ Accordion ---
+    function toggleFaq(element) {
+        element.parentElement.classList.toggle('open');
+    }
+
+    // --- Q7: Dynamic Table ---
+    function generateTable() {
+        const rows = document.getElementById('rows').value;
+        const cols = document.getElementById('cols').value;
+        const container = document.getElementById('tableContainer');
+        
+        if (rows < 1 || cols < 1) return alert("Please enter valid numbers!");
+
+        let html = '<table id="dynamicTable">';
+        for (let i = 0; i < rows; i++) {
+            html += '<tr>';
+            for (let j = 0; j < cols; j++) {
+                html += `<td>Row ${i+1}, Col ${j+1}</td>`;
+            }
+            html += '</tr>';
+        }
+        html += '</table>';
+        container.innerHTML = html;
+    }
+
+    // --- Q8: Quiz & Clock ---
+    let clockInterval;
+    function startClock() {
+        if (clockInterval) clearInterval(clockInterval);
+        function tick() {
+            const now = new Date();
+            document.getElementById('clockDisplay').innerText = now.toLocaleTimeString();
+        }
+        tick();
+        clockInterval = setInterval(tick, 1000);
+    }
+
+    function calculateScore() {
+        let score = 0;
+        // Correct answers: Q1 -> b (<H1>), Q2 -> a (color)
+        const q1 = document.querySelector('input[name="q1"]:checked');
+        const q2 = document.querySelector('input[name="q2"]:checked');
+
+        if (q1 && q1.value === 'b') score++;
+        if (q2 && q2.value === 'a') score++;
+
+        document.getElementById('quizResult').innerText = `You scored ${score} / 2`;
+        if(score === 2) document.getElementById('quizResult').style.color = "green";
+        else document.getElementById('quizResult').style.color = "red";
+    }
+
+    // Initialize View
+    switchProblem();
+
+</script>
+</body>
+</html>
